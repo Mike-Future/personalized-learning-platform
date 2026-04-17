@@ -1,6 +1,5 @@
 import React from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts'
+import { ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts'
 import { BookOpen, Target, TrendingUp, Award } from 'lucide-react'
 import { RecommendationCard } from './RecommendationCard'
 import { useUserStore } from '../store/userStore'
@@ -162,18 +161,30 @@ const StatCard: React.FC<{
   value: string | number
   trend: string
   color: string
-}> = ({ icon: Icon, label, value, trend, color }) => (
-  <div className="bg-white rounded-xl shadow-md p-6">
-    <div className={`w-12 h-12 rounded-lg bg-${color}-100 flex items-center justify-center mb-4`}>
-      <Icon className={`w-6 h-6 text-${color}-600`} />
+}> = ({ icon: Icon, label, value, trend, color }) => {
+  const colorStyles: Record<string, { bg: string; text: string }> = {
+    blue: { bg: 'bg-blue-100', text: 'text-blue-600' },
+    green: { bg: 'bg-green-100', text: 'text-green-600' },
+    purple: { bg: 'bg-purple-100', text: 'text-purple-600' },
+    orange: { bg: 'bg-orange-100', text: 'text-orange-600' },
+    gray: { bg: 'bg-gray-100', text: 'text-gray-600' },
+  }
+
+  const style = colorStyles[color] ?? colorStyles.gray
+
+  return (
+    <div className="bg-white rounded-xl shadow-md p-6">
+      <div className={`${style.bg} w-12 h-12 rounded-lg flex items-center justify-center mb-4`}>
+        <Icon className={`${style.text} w-6 h-6`} />
+      </div>
+      <p className="text-gray-600 text-sm">{label}</p>
+      <div className="flex items-end justify-between mt-2">
+        <span className="text-2xl font-bold text-gray-900">{value}</span>
+        <span className={`${style.text} text-sm font-medium`}>{trend}</span>
+      </div>
     </div>
-    <p className="text-gray-600 text-sm">{label}</p>
-    <div className="flex items-end justify-between mt-2">
-      <span className="text-2xl font-bold text-gray-900">{value}</span>
-      <span className={`text-sm text-${color}-600 font-medium`}>{trend}</span>
-    </div>
-  </div>
-)
+  )
+}
 
 const PathItem: React.FC<{
   title: string
