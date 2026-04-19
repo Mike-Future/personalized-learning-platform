@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react'
 import { ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts'
-import { BookOpen, Target, TrendingUp, Award } from 'lucide-react'
+import { BookOpen, Target, TrendingUp, Award, LogOut } from 'lucide-react'
 import { RecommendationCard } from './RecommendationCard'
 import { useUserStore } from '../store/userStore'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import toast from 'react-hot-toast'
 
 const skillData = [
   { subject: 'Math', A: 120, fullMark: 150 },
@@ -46,18 +47,43 @@ const mockRecommendations = [
 ]
 
 export const LearningDashboard: React.FC = () => {
-  const { user } = useUserStore()
+  const { user, setUser } = useUserStore()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login')
+    }
+  }, [user, navigate])
+
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    setUser(null)
+    toast.success('Logged out successfully')
+    navigate('/')
+  }
+
+  if (!user) return null
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Welcome back, {user?.fullName || 'Student'}! 👋
-          </h1>
-          <p className="text-gray-600 mt-2">
-            Your AI-powered learning journey continues. Here's what's personalized for you today.
-          </p>
+        <div className="mb-8 flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Welcome back, {user?.fullName || 'Student'}! 👋
+            </h1>
+            <p className="text-gray-600 mt-2">
+              Your AI-powered learning journey continues. Here's what's personalized for you today.
+            </p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition"
+          >
+            <LogOut className="w-4 h-4" />
+            Logout
+          </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">

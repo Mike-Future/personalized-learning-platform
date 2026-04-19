@@ -1,7 +1,7 @@
 from __future__ import annotations
 from datetime import datetime
 from typing import List, Optional
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, ConfigDict
 
 class Token(BaseModel):
     access_token: str
@@ -11,7 +11,7 @@ class TokenPayload(BaseModel):
     sub: str
 
 class UserBase(BaseModel):
-    email: EmailStr
+    email: str
     full_name: str
 
 class UserCreate(UserBase):
@@ -31,13 +31,11 @@ class UserPublic(UserBase):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class RecommendationOut(BaseModel):
     course_id: int
     confidence_score: float
     reason: str
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
