@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
+from app.routers import auth, recommendations
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -15,6 +16,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(auth.router, prefix="/api/v1")
+app.include_router(recommendations.router, prefix="/api/v1")
 
 @app.get("/health")
 async def health_check():

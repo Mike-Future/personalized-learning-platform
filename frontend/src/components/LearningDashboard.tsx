@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts'
 import { BookOpen, Target, TrendingUp, Award } from 'lucide-react'
 import { RecommendationCard } from './RecommendationCard'
 import { useUserStore } from '../store/userStore'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const skillData = [
   { subject: 'Math', A: 120, fullMark: 150 },
